@@ -321,7 +321,7 @@ def get_board(xarr, yarr, img):
 
                 im = normalize(imc.convert("L"))
 
-                im.save("wordle/debug/" + str(xp) + str(yp) + ".png")
+                # im.save("wordle/debug/" + str(xp) + str(yp) + ".png")
 
                 num = most_similar2(im, im_arr)
 
