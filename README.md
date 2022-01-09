@@ -24,7 +24,3 @@ This script uses logic cut and refined from my babble script, with the logic ste
   - a sorting pass is done, using a pre-generated dataset to score the value of each letter in the word (avoiding lower-value repeats)
     - generated dataset is the frequency of each letter of the alphabet in each specific indexed position in all 5 letter words in the word dataset
 5. Prints the result, which is a list of words, with the most likely words to come next as first in the list
-
-Some of the results will not be valid for wordle, the NLTK corpus I used to generate my wordset includes archaic english and etc that wordle does not include.
-
-Luckily, wordle doesn't penalize for trying to enter words it doesn't accept.
