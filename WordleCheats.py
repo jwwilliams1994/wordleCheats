@@ -249,7 +249,7 @@ def sieve(img, letters):  # letter matching similar can be tricky...
     return img
 
 
-def get_sim(img, img2, debug=False):  # this one is currently used, above and below are ignored
+def get_sim(img, img2, debug=False):
     img2 = np.asarray(img2)
     res = cv.matchTemplate(img, img2, cv.TM_SQDIFF_NORMED)
     # print(cv.minMaxLoc(res))
