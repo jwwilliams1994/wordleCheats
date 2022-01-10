@@ -1,4 +1,6 @@
 import json, re, colorsys, os, string
+import random
+
 import cv2 as cv
 from PIL import Image, ImageFilter, ImageChops, ImageOps, ImageGrab
 import matplotlib.pyplot as plt
@@ -395,8 +397,57 @@ def get_moves(req_arr, right_arr, wrong_arr, not_arr):
     # print(reg)
     r1 = re.compile(reg)
     out = list(filter(r1.match, wordset))
+    for l in req_arr:
+        out = list(filter(lambda a: l in a, out))
     out.sort(key=word_value, reverse=True)
     return out
+
+
+def return_sim_word():
+    reg = "[a-z]{5}\\b"
+    r1 = re.compile(reg)
+    out = list(filter(r1.match, wordset))
+    return random.choice(out)
+
+
+def wordle_simulate(final, input, board=None):
+    if board is None:
+        char_arr = []
+        for x in range(5):
+            char_arr2 = []
+            for y in range(6):
+                char_arr2.append("_")
+            char_arr.append(char_arr2)
+        board = char_arr
+        return board, [], ['', '', '', '', ''], [[], [], [], [], []], []
+    wrong_arr = [[], [], [], [], []]
+    req_arr = []
+    right_arr = ["", "", "", "", ""]
+    not_arr = []
+    for y in range(6):
+        for x in range(5):
+            let = board[x][y]
+            if let == "_":
+                board[x][y] = input[x]
+
+    for y in range(6):
+        for x in range(5):
+            let = board[x][y].lower()
+            valid = final[x].lower()
+            if let == valid:
+                board[x][y] = char
+                right_arr[x] = char.lower()
+                req_arr = {*req_arr, char.lower()}
+            elif char in final:
+                board[x][y] = char
+                req_arr = {*req_arr, char.lower()}
+                wrong_arr[x] = list({*wrong_arr[xp], char.lower()})
+            else:
+                board[x][y] = char.lower()
+                wrong_arr[x] = list({*wrong_arr[xp], char.lower()})
+                not_arr.append(char.lower())
+
+
 
 
 # img = Image.open("wordle/clip2.png")
@@ -409,10 +460,29 @@ xarr, yarr = get_grid(img)
 # show_grid(img, xarr, yarr)
 # plotty(xarr, yarr)
 
-
 board, req_arr, right_arr, wrong_arr, not_arr = get_board(xarr, yarr, img)
 
+# word = return_sim_word()
+#
+# board, req_arr, right_arr, wrong_arr, not_arr = wordle_simulate(word)
+
+
 show_board(board)
+
+print(board[0][1])
+
+if board[0][1] == "_":
+    if len(req_arr) <= 2:
+        for i in req_arr:
+            not_arr = list({*not_arr, i})
+        req_arr = []
+        for i in range(len(right_arr)):
+            if right_arr[i] != '':
+                wrong_arr[i].append(right_arr[i])
+                right_arr[i] = ''
+
+
+print(req_arr, right_arr, wrong_arr, not_arr)
 
 words = get_moves(req_arr, right_arr, wrong_arr, not_arr)
 
